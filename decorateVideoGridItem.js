@@ -25,7 +25,6 @@
 
 import * as React from 'react';
 import { Box } from '#vcs-react/components';
-import * as layoutFuncs from '../layouts.js';
 
 export default function decorateVideoGridItem(itemIndex, itemProps, gridProps) {
   return {
@@ -39,7 +38,6 @@ export default function decorateVideoGridItem(itemIndex, itemProps, gridProps) {
           cornerRadius_px: 12,
           fillColor: 'transparent'
         }}
-        layout={[layoutFuncs.fit]}
       />
     ),
     clipItem: false,
