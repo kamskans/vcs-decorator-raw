@@ -25,7 +25,7 @@
 
 import * as React from 'react';
 import { Box } from '#vcs-react/components';
-import * as layoutFuncs from '../../layouts.js';
+import * as layoutFuncs from '../layouts.js';
 
 export default function decorateVideoGridItem(itemIndex, itemProps, gridProps) {
   return {
