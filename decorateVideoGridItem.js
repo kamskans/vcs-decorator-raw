@@ -4,9 +4,12 @@
 */
 
 import * as React from 'react';
-import { Box } from '#vcs-react/components';
+import { Box, Video } from '#vcs-react/components';
 
 export default function decorateVideoGridItem(itemIndex, itemProps, gridProps) {
+  const { videoId, isAudioOnly, paused } = itemProps;
+  const hasLiveVideo = !isAudioOnly && !paused;
+
   return (
     <Box
       style={{
@@ -15,6 +18,13 @@ export default function decorateVideoGridItem(itemIndex, itemProps, gridProps) {
         cornerRadius_px: 12,
         fill: 'none'
       }}
-    />
+    >
+      {hasLiveVideo && (
+        <Video
+          src={videoId}
+          scaleMode="fill"
+        />
+      )}
+    </Box>
   );
 }
