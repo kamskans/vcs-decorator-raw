@@ -22,7 +22,10 @@ export default function decorateVideoGridItem(itemIndex, itemProps, gridProps) {
       {hasLiveVideo && (
         <Video
           src={videoId}
-          scaleMode="fill"
+          scaleMode="fit"
+          style={{
+            cornerRadius_px: 12
+          }}
         />
       )}
     </Box>
