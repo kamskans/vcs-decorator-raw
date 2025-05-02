@@ -10,16 +10,18 @@ export default function decorateVideoGridItem(itemIndex, itemProps, gridProps) {
   const { videoId, isAudioOnly, paused } = itemProps;
   const hasLiveVideo = !isAudioOnly && !paused;
 
-  return (
-    <Box
-      style={{
-        strokeColor: '#FFFFFF',
-        strokeWidth_px: 12,
-        cornerRadius_px: 12,
-        fillColor: 'transparent'
-      }}
-    >
-      {hasLiveVideo && (
+  return {
+    enableDefaultLabels: true,
+    enableDefaultHighlight: false,
+    customComponent: hasLiveVideo ? (
+      <Box
+        style={{
+          strokeColor: '#FFFFFF',
+          strokeWidth_px: 12,
+          cornerRadius_px: 12,
+          fillColor: 'transparent'
+        }}
+      >
         <Video
           src={videoId}
           scaleMode="fit"
@@ -27,7 +29,9 @@ export default function decorateVideoGridItem(itemIndex, itemProps, gridProps) {
             cornerRadius_px: 12
           }}
         />
-      )}
-    </Box>
-  );
+      </Box>
+    ) : null,
+    clipItem: false,
+    customLayoutForVideo: null
+  };
 }
