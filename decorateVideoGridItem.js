@@ -1,6 +1,8 @@
 /*
-  This is an override point for video grid item decoration.
-  The function gets called for each item in the grid.
+  This is an override point.
+
+  You can replace this function to return custom decorator components
+  for video grid items. The function gets called for each item.
 
   The default rendering for labels and highlight can also be toggled off here.
 
@@ -23,6 +25,7 @@
 
 import * as React from 'react';
 import { Box } from '#vcs-react/components';
+import * as layoutFuncs from '../../layouts.js';
 
 export default function decorateVideoGridItem(itemIndex, itemProps, gridProps) {
   return {
@@ -34,11 +37,12 @@ export default function decorateVideoGridItem(itemIndex, itemProps, gridProps) {
           strokeColor: '#FFFFFF',
           strokeWidth_px: 12,
           cornerRadius_px: 12,
-          fill: 'none'
+          fillColor: 'transparent'
         }}
+        layout={[layoutFuncs.fit]}
       />
     ),
-    clipItem: true,
+    clipItem: false,
     customLayoutForVideo: null
   };
 }
