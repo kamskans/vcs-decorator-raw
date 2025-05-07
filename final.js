@@ -24,7 +24,7 @@
 */
 
 import * as React from 'react';
-import { Text } from '#vcs-react/components';
+import { Box, Text } from '#vcs-react/components';
 
 export default function decorateVideoGridItem(itemIndex, itemProps, gridProps) {
   // Log the itemProps to the browser console for inspection
@@ -37,18 +37,29 @@ export default function decorateVideoGridItem(itemIndex, itemProps, gridProps) {
     enableDefaultLabels: false,
     enableDefaultHighlight: true,
     customComponent: (
-      <Text
-        style={{
-          textColor: '#FF00FF',
-          fontSize_px: 48,
-          fontWeight: 'bold',
-          textAlign: 'center',
-        }}
-      >
-        {label}
-      </Text>
+      <>
+        <Box
+          style={{
+            strokeColor: '#FFFFFF',
+            strokeWidth_px: 12,
+            cornerRadius_px: 12,
+            fillColor: 'none',
+            pointerEvents: 'none',
+          }}
+        />
+        <Text
+          style={{
+            textColor: '#FF00FF',
+            fontSize_px: 48,
+            fontWeight: 'bold',
+            textAlign: 'center',
+          }}
+        >
+          {label}
+        </Text>
+      </>
     ),
-    clipItem: false,
+    clipItem: true,
     customLayoutForVideo: null
   };
 }
