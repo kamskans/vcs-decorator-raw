@@ -27,6 +27,11 @@ import * as React from 'react';
 import { Text } from '#vcs-react/components';
 
 export default function decorateVideoGridItem(itemIndex, itemProps, gridProps) {
+  // Log the itemProps to the browser console for inspection
+  if (typeof window !== "undefined" && window.console) {
+    console.log("decorateVideoGridItem itemProps:", itemProps);
+  }
+
   const label = itemProps?.participant?.user_name || itemProps?.participant?.userName || 'Unknown';
   return {
     enableDefaultLabels: false,
