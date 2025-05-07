@@ -1,110 +1,74 @@
 import * as React from "react";
-import { Box, Video, Text } from "#vcs-react/components";
+import { Box, Video } from "#vcs-react/components";
 
-// --- Custom Decorator: White Border ---
-function decorateVideoGridItem() {
+// Custom decorator: white border, 4px thick
+function decorateVideoSplitItem() {
   return {
-    enableDefaultLabels: true,
-    enableDefaultHighlight: false,
     customComponent: (
       <Box
         style={{
           strokeColor: "#FFFFFF",
-          strokeWidth_px: 12,
-          cornerRadius_px: 12,
+          strokeWidth_px: 4,
+          cornerRadius_px: 8,
           fillColor: "transparent"
         }}
       />
     ),
     clipItem: false,
-    customLayoutForVideo: null
   };
 }
 
-// --- Main VideoGrid Component ---
-export default function VideoGrid(props) {
-  const {
-    participantDescs = [],
-    labelsOffset_px = 0,
-    itemInterval_gu = 0,
-    outerPadding_gu = 0,
-    preserveItemAspectRatio = false,
-    fullScreenHighlightItemIndex = -1
-  } = props;
+// Minimal split layout: show up to 2 participant videos side by side
+export default function SimpleSplit(props) {
+  const { participantDescs = [] } = props;
+  const totalItems = Math.max(1, Math.min(participantDescs.length, 2));
 
-  const totalNumItems = participantDescs.length;
-
-  function makeItem(index, itemProps) {
-    const { isAudioOnly, videoId, displayName, paused } = itemProps;
-    let key = "videogriditem_" + index;
-
-    // Use the custom decorator
-    const {
-      enableDefaultLabels = false,
-      customComponent: customDecoratorComponent,
-      clipItem = false,
-      customLayoutForVideo
-    } = decorateVideoGridItem(index, itemProps, props);
-
-    let participantLabel;
-    if (enableDefaultLabels && displayName && displayName.length > 0) {
-      participantLabel = (
-        <Text key={"label_" + displayName} style={{ position: "absolute", bottom: 0, left: 0, color: "#fff", background: "rgba(0,0,0,0.5)", padding: 4 }}>
-          {displayName}
-        </Text>
-      );
-    }
-
+  function makeItem(idx) {
+    const participant = participantDescs[idx];
+    if (!participant) return null;
+    const { videoId, isAudioOnly, paused } = participant;
     const hasLiveVideo = !isAudioOnly && !paused;
 
-    let video;
-    if (!hasLiveVideo) {
-      video = (
-        <Box style={{ background: "#333", width: "100%", height: "100%" }}>
-          <Text style={{ color: "#fff" }}>No Video</Text>
-        </Box>
-      );
-    } else {
-      video = (
-        <Video src={videoId} style={{ width: "100%", height: "100%" }} />
-      );
-    }
+    const { customComponent, clipItem } = decorateVideoSplitItem();
 
     return (
       <Box
-        key={key}
-        id={key}
+        key={idx}
         style={{
           position: "relative",
-          width: 320,
-          height: 180,
+          width: "100%",
+          height: "100%",
           margin: 8,
-          borderRadius: 16,
-          overflow: "hidden"
+          borderRadius: 8,
+          overflow: "hidden",
+          flex: 1,
         }}
         clip={clipItem}
       >
-        {video}
-        {participantLabel}
-        {customDecoratorComponent}
+        {hasLiveVideo ? (
+          <Video src={videoId} style={{ width: "100%", height: "100%" }} />
+        ) : (
+          <Box style={{ background: "#333", width: "100%", height: "100%" }} />
+        )}
+        {customComponent}
       </Box>
     );
   }
 
   return (
     <Box
-      id="videogrid"
+      id="split"
       style={{
         display: "flex",
-        flexWrap: "wrap",
-        justifyContent: "center",
-        alignItems: "center",
+        flexDirection: "row",
         width: "100%",
         height: "100%",
-        background: "#222"
+        background: "#111",
+        alignItems: "center",
+        justifyContent: "center",
       }}
     >
-      {participantDescs.map((d, idx) => makeItem(idx, d))}
+      {Array.from({ length: totalItems }).map((_, idx) => makeItem(idx))}
     </Box>
   );
 }
