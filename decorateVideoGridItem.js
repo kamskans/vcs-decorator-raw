@@ -27,22 +27,9 @@ import * as React from 'react';
 import { Box } from '#vcs-react/components';
 import * as layoutFuncs from '../../layouts.js';
 
-export default function decorateVideoGridItem(itemIndex, itemProps, gridProps) {
+export default function decorateVideoGridItem() {
   return {
     enableDefaultLabels: true,
-    enableDefaultHighlight: false,
-    customComponent: (
-      <Box
-        style={{
-          strokeColor: '#FFFFFF',
-          strokeWidth_px: 12,
-          cornerRadius_px: 12,
-          fillColor: 'transparent'
-        }}
-        layout={[layoutFuncs.fit]}
-      />
-    ),
-    clipItem: false,
-    customLayoutForVideo: null
+    enableDefaultHighlight: true
   };
 }
