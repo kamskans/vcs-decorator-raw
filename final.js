@@ -43,7 +43,6 @@ export default function decorateVideoGridItem(itemIndex, itemProps, gridProps) {
             strokeColor: '#FFFFFF',
             strokeWidth_px: 12,
             cornerRadius_px: 12,
-            fillColor: 'none',
             pointerEvents: 'none',
           }}
         />
