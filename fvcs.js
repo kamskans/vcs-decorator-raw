@@ -27,8 +27,9 @@ import * as React from 'react';
 import { Text } from '#vcs-react/components';
 
 export default function decorateVideoGridItem(itemIndex, itemProps, gridProps) {
+  const label = itemProps?.participant?.user_name || itemProps?.participant?.userName || 'Unknown';
   return {
-    enableDefaultLabels: true,
+    enableDefaultLabels: false,
     enableDefaultHighlight: true,
     customComponent: (
       <Text
@@ -39,7 +40,7 @@ export default function decorateVideoGridItem(itemIndex, itemProps, gridProps) {
           textAlign: 'center',
         }}
       >
-        hello
+        {label}
       </Text>
     ),
     clipItem: false,
