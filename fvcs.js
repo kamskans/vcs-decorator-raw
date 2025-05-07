@@ -24,25 +24,25 @@
 */
 
 import * as React from 'react';
-import { Box } from '#vcs-react/components';
-import * as layoutFuncs from '../../layouts.js';
+import { Text } from '#vcs-react/components';
 
 export default function decorateVideoGridItem(itemIndex, itemProps, gridProps) {
   return {
     enableDefaultLabels: true,
     enableDefaultHighlight: true,
     customComponent: (
-      <Box
+      <Text
         style={{
-          strokeColor: '#FFFFFF',
-          strokeWidth_px: 12,
-          cornerRadius_px: 12,
-          fillColor: 'none',
-          pointerEvents: 'none',
+          textColor: '#FF00FF',
+          fontSize_px: 48,
+          fontWeight: 'bold',
+          textAlign: 'center',
         }}
-      />
+      >
+        hello
+      </Text>
     ),
-    clipItem: true,
+    clipItem: false,
     customLayoutForVideo: null
   };
 }
