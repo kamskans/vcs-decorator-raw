@@ -297,12 +297,10 @@ function VideoSplit(props) {
 }
 
 function VideoSingleCustom(props) {
-  let { participantDescs = [] } = props;
+  const { participantDescs = [], overrideDecoration = {} } = props;
   const participant = participantDescs[0];
   const { videoId, paused, isScreenshare } = participant || {};
-  const fillStyle = {
-    fillColor: pauseBgColor,
-  };
+  const fillStyle = { fillColor: pauseBgColor };
 
   return paused ? (
     <PausedPlaceholder placeholderStyle={fillStyle} />
@@ -312,7 +310,9 @@ function VideoSingleCustom(props) {
         key="video"
         src={videoId}
         scaleMode={isScreenshare ? "fit" : "fill"}
+        style={overrideDecoration?.videoStyle} // ✅ Apply border here
       />
     </Box>
   );
 }
+
