@@ -34,10 +34,10 @@ function placeTestBox(parentFrame, params) {
   const label = params && params.displayName ? params.displayName : '';
   const chars = label.length || 8;
   // Estimate: 14px font, bold, plus padding, so ~16px per char, min width 64px
-  const pxPerChar = 24;
+  const pxPerChar = 12;
   const minWidth = 64;
   const w = Math.max(minWidth, chars * pxPerChar);
-  const h = 50; // Further increase box height to 60px for two lines
+  const h = 40; // Further increase box height to 60px for two lines
   // Position at bottom-left with an 8px margin
   x = parentFrame.x + 8;
   y = parentFrame.y + parentFrame.h - h - 8;
@@ -73,7 +73,7 @@ export default function decorateVideoGridItem(itemIndex, itemProps, gridProps) {
             
           }}
         >
-          <Text layout={[placeText, { vAlign: 'center', hAlign: 'center', yOffset_gu: 0.25 }]} style={{ textColor: '#000', fontSize_px: 24, fontWeight: 'bold', textAlign: 'center' }}>{itemProps && itemProps.displayName ? itemProps.displayName : 'Participant'}</Text>
+          <Text layout={[placeText, { vAlign: 'center', hAlign: 'center', yOffset_gu: 0.25 }]} style={{ textColor: '#000', fontSize_px: 18, fontWeight: 'bold', textAlign: 'center' }}>{itemProps && itemProps.displayName ? itemProps.displayName : 'Participant'}</Text>
         </Box>
       </Box>
     ),
