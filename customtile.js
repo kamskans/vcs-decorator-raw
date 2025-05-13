@@ -73,7 +73,7 @@ export default function decorateVideoGridItem(itemIndex, itemProps, gridProps) {
             
           }}
         >
-          <Text layout={[placeText, { vAlign: 'center', hAlign: 'center', yOffset_gu: 0.25 }]} style={{ textColor: '#000', fontSize_px: 28, fontWeight: 'bold', textAlign: 'center' }}>{itemProps && itemProps.displayName ? itemProps.displayName : 'Participant'}</Text>
+          <Text layout={[placeText, { vAlign: 'center', hAlign: 'center', yOffset_gu: 0.25 }]} style={{ textColor: '#000', fontSize_px: 24, fontWeight: 'bold', textAlign: 'center' }}>{itemProps && itemProps.displayName ? itemProps.displayName : 'Participant'}</Text>
         </Box>
       </Box>
     ),
