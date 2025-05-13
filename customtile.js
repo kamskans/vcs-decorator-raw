@@ -34,7 +34,7 @@ function placeTestBox(parentFrame, params) {
   const label = params && params.displayName ? params.displayName : '';
   const chars = label.length || 8;
   // Estimate: 14px font, bold, plus padding, so ~16px per char, min width 64px
-  const pxPerChar = 20;
+  const pxPerChar = 24;
   const minWidth = 64;
   const w = Math.max(minWidth, chars * pxPerChar);
   const h = 50; // Further increase box height to 60px for two lines
