@@ -51,6 +51,17 @@ export default function decorateVideoGridItem(itemIndex, itemProps, gridProps) {
     console.log("decorateVideoGridItem itemProps:", itemProps);
   }
 
+  // Only show the label and box if displayName is present
+  if (!itemProps || !itemProps.displayName) {
+    return {
+      enableDefaultLabels: false,
+      enableDefaultHighlight: true,
+      customComponent: null,
+      clipItem: true,
+      customLayoutForVideo: null
+    };
+  }
+
   return {
     enableDefaultLabels: false, // We'll render the label ourselves
     enableDefaultHighlight: true,
@@ -64,16 +75,15 @@ export default function decorateVideoGridItem(itemIndex, itemProps, gridProps) {
         }}
       >
         <Box
-          layout={[placeTestBox, { displayName: itemProps && itemProps.displayName ? itemProps.displayName : '' }]}
+          layout={[placeTestBox, { displayName: itemProps.displayName }]}
           style={{
             fillColor: '#FFFFFF',
             opacity: 0,
             cornerRadius_px: 12,
             boxShadow: '0 2px 6px rgba(0,0,0,0.15)',
-            
           }}
         >
-          <Text layout={[placeText, { vAlign: 'center', hAlign: 'center', yOffset_gu: 0.25 }]} style={{ textColor: '#000', fontSize_px: 18, fontWeight: 'bold', textAlign: 'center' }}>{itemProps && itemProps.displayName ? itemProps.displayName : 'Participant'}</Text>
+          <Text layout={[placeText, { vAlign: 'center', hAlign: 'center', yOffset_gu: 0.25 }]} style={{ textColor: '#000', fontSize_px: 18, fontWeight: 'bold', textAlign: 'center' }}>{itemProps.displayName}</Text>
         </Box>
       </Box>
     ),
