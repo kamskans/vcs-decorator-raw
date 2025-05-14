@@ -12,7 +12,7 @@ function placeTestBox(parentFrame, params) {
   // Estimate: 14px font, bold, plus padding, so ~16px per char, min width 64px
   const pxPerChar = 12;
   const minWidth = 64;
-  const w = Math.max(minWidth, chars * pxPerChar);
+  const w = Math.max(minWidth, chars * pxPerChar) + 32;
   const h = 40; // Match grid item box height
   // Position at bottom-left with an 8px margin
   x = parentFrame.x + 8;
@@ -20,10 +20,20 @@ function placeTestBox(parentFrame, params) {
   return { x, y, w, h };
 }
 
-
 export default function decorateVideoSingleItem(itemProps) {
+  // Only show the label and box if displayName is present
+  if (!itemProps || !itemProps.displayName) {
+    return {
+      enableDefaultLabels: false,
+      enableDefaultHighlight: true,
+      customComponent: null,
+      clipItem: true,
+      customLayoutForVideo: null
+    };
+  }
+
   return {
-    enableDefaultLabels: false,
+    enableDefaultLabels: false, // We'll render the label ourselves
     enableDefaultHighlight: true,
     customComponent: (
       <Box
@@ -35,7 +45,7 @@ export default function decorateVideoSingleItem(itemProps) {
         }}
       >
         <Box
-          layout={[placeTestBox, { displayName: itemProps && itemProps.displayName ? itemProps.displayName : '' }]}
+          layout={[placeTestBox, { displayName: itemProps.displayName }]}
           style={{
             fillColor: '#FFFFFF',
             opacity: 0,
@@ -43,7 +53,7 @@ export default function decorateVideoSingleItem(itemProps) {
             boxShadow: '0 2px 6px rgba(0,0,0,0.15)',
           }}
         >
-          <Text layout={[placeText, { vAlign: 'center', hAlign: 'center', yOffset_gu: 0.25 }]} style={{ textColor: '#000', fontSize_px: 18, fontWeight: 'bold', textAlign: 'center' }}>{itemProps && itemProps.displayName ? itemProps.displayName : 'Participant'}</Text>
+          <Text layout={[placeText, { vAlign: 'center', hAlign: 'center', yOffset_gu: 0.25 }]} style={{ textColor: '#000', fontSize_px: 18, fontWeight: 'bold', textAlign: 'center' }}>{itemProps.displayName}</Text>
         </Box>
       </Box>
     ),
