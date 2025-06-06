@@ -14,9 +14,9 @@ function placeTestBox(parentFrame, params) {
   const minWidth = 64;
   const w = Math.max(minWidth, chars * pxPerChar) + 32;
   const h = 40; // Match grid item box height
-  // Position at bottom-left with an 8px margin
+  // Position at top-left with an 8px margin
   x = parentFrame.x + 8;
-  y = parentFrame.y + parentFrame.h - h - 8;
+  y = parentFrame.y + 8;
   return { x, y, w, h };
 }
 
