@@ -27,34 +27,23 @@ import * as React from 'react';
 import { Box, Text } from '#vcs-react/components';
 import { placeText } from '../../layouts.js';
 
-// Layout function to position and size the TEST box in the top left corner
+// Layout function to position and size the TEST box in the bottom-left corner
 function placeTestBox(parentFrame, params) {
   let { x, y } = parentFrame;
   const label = params && params.displayName ? params.displayName : '';
   const chars = label.length || 8;
   const pxPerChar = 12;
   const minWidth = 64;
-  const w = Math.max(minWidth, chars * pxPerChar) + 32;
+  const w = Math.max(minWidth, chars * pxPerChar);
   const h = 40;
   x = parentFrame.x + 8;
-  y = parentFrame.y + 8;
+  y = parentFrame.y + 8;  // Position at top with 8px margin
   return { x, y, w, h };
 }
 
 export default function decorateVideoDominantItem(itemIndex, itemProps, dominantProps) {
-  // Only show the label and box if displayName is present
-  if (!itemProps || !itemProps.displayName) {
-    return {
-      enableDefaultLabels: false,
-      enableDefaultHighlight: true,
-      customComponent: null,
-      clipItem: true,
-      customLayoutForVideo: null
-    };
-  }
-
   return {
-    enableDefaultLabels: false, // We'll render the label ourselves
+    enableDefaultLabels: false,
     enableDefaultHighlight: true,
     customComponent: (
       <Box
@@ -66,7 +55,7 @@ export default function decorateVideoDominantItem(itemIndex, itemProps, dominant
         }}
       >
         <Box
-          layout={[placeTestBox, { displayName: itemProps.displayName }]}
+          layout={[placeTestBox, { displayName: itemProps && itemProps.displayName ? itemProps.displayName : '' }]}
           style={{
             fillColor: '#FFFFFF',
             opacity: 0,
@@ -74,7 +63,7 @@ export default function decorateVideoDominantItem(itemIndex, itemProps, dominant
             boxShadow: '0 2px 6px rgba(0,0,0,0.15)',
           }}
         >
-          <Text layout={[placeText, { vAlign: 'center', hAlign: 'center', yOffset_gu: 0.25 }]} style={{ textColor: '#000', fontSize_px: 18, fontWeight: 'bold', textAlign: 'center' }}>{itemProps.displayName}</Text>
+          <Text layout={[placeText, { vAlign: 'center', hAlign: 'center', yOffset_gu: 0.25 }]} style={{ textColor: '#000', fontSize_px: 18, fontWeight: 'bold', textAlign: 'center' }}>{itemProps && itemProps.displayName ? itemProps.displayName : 'Participant'}</Text>
         </Box>
       </Box>
     ),
@@ -82,4 +71,3 @@ export default function decorateVideoDominantItem(itemIndex, itemProps, dominant
     customLayoutForVideo: null
   };
 }
-
