@@ -37,7 +37,7 @@ function placeTestBox(parentFrame, params) {
   const w = Math.max(minWidth, chars * pxPerChar) + 32;
   const h = 40;
   x = parentFrame.x + 8;
-  y = parentFrame.y + parentFrame.h - h - 8;
+  y = parentFrame.y + 8;  // Position at top with 8px margin
   return { x, y, w, h };
 }
 
