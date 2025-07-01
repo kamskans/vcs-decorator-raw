@@ -8,7 +8,7 @@ import { DEFAULT_OFFSET_VIDEO_SINGLE_PX } from '../constants.js';
 
 export default function VideoGrid(gridProps) {
   const params = useParams();
-  const layoutMode = (params["mode"] || "grid").toLowerCase(); // 'grid' or 'split'
+  const layoutMode = (params["mode"] || "grid").toLowerCase();
 
   const {
     showLabels,
@@ -156,37 +156,41 @@ export default function VideoGrid(gridProps) {
     );
   }
 
-  function makeSplitItems() {
-    const limited = participantDescs.slice(0, 2);
-    return limited.map((participant, idx) => {
-      const key = 'splititem_' + idx;
-      return (
-        <Box
-          key={key}
-          id={key}
-          layout={[
-            layoutFuncs.splitHorizontal,
-            { index: idx, total: limited.length, margin_gu: 1 },
-          ]}
-        >
-          {participant.paused ? (
-            <PausedPlaceholder placeholderStyle={placeholderStyle} />
-          ) : (
-            <Video
-              src={participant.videoId}
-              scaleMode="fill"
-              style={videoStyle}
-            />
-          )}
-        </Box>
-      );
-    });
+  // Render hidden participant videos off-screen (very small + opacity 0)
+  function renderHiddenParticipant(participant, index) {
+    const key = `hidden_participant_${index}`;
+    return (
+      <Box
+        key={key}
+        layout={[() => ({ x: -9999, y: -9999, w: 1, h: 1 })]}
+        style={{ opacity: 0 }}
+      >
+        {!participant.paused ? (
+          <Video src={participant.videoId} scaleMode="fill" />
+        ) : (
+          <PausedPlaceholder placeholderStyle={placeholderStyle} />
+        )}
+      </Box>
+    );
   }
 
-  const children =
-    layoutMode === 'split'
-      ? makeSplitItems()
-      : participantDescs.map((d, idx) => makeGridItem(idx, d));
+  if (layoutMode === 'split') {
+    // Show only first 2 participants in split mode visibly
+    const visibleParticipants = participantDescs.slice(0, 2);
+    const hiddenParticipants = participantDescs.slice(2);
 
-  return <Box id="videogrid">{children}</Box>;
+    return (
+      <Box id="videogrid">
+        {visibleParticipants.map((p, i) => makeGridItem(i, p))}
+        {hiddenParticipants.map(renderHiddenParticipant)}
+      </Box>
+    );
+  } else {
+    // Grid mode - show all participants normally
+    return (
+      <Box id="videogrid">
+        {participantDescs.map((p, i) => makeGridItem(i, p))}
+      </Box>
+    );
+  }
 }
