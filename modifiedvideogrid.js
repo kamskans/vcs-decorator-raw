@@ -12,8 +12,8 @@ export default function VideoGrid(gridProps) {
 
   const {
     showLabels,
-    scaleMode,
-    scaleModeForScreenshare,
+    scaleMode = 'fit',
+    scaleModeForScreenshare = 'fit',
     videoStyle,
     videoLabelStyle,
     placeholderStyle,
@@ -27,6 +27,23 @@ export default function VideoGrid(gridProps) {
   } = gridProps;
 
   const totalNumItems = participantDescs.length;
+
+  // Define scale modes based on mode
+  const videoScaleModeGrid = scaleMode;
+  const videoScaleModeSplit = 'fill'; // zoom in for split mode
+
+  // Optional: Adjust videoStyle per mode if needed
+  // For example, remove highlightColor or cornerRadius on split if that causes zoom
+  const adjustedVideoStyle = React.useMemo(() => {
+    if (layoutMode === 'split') {
+      // Example: remove highlight or adjust as needed
+      return {
+        ...videoStyle,
+        // override anything here if needed to avoid zoom issues
+      };
+    }
+    return videoStyle;
+  }, [layoutMode, videoStyle]);
 
   function makeGridItem(index, itemProps) {
     const {
@@ -94,15 +111,21 @@ export default function VideoGrid(gridProps) {
       );
     }
 
-    const videoScaleMode = isScreenshare ? scaleModeForScreenshare : scaleMode;
+    // Choose scaleMode depending on mode and if screenshare
+    const chosenScaleMode = isScreenshare
+      ? scaleModeForScreenshare
+      : layoutMode === 'split'
+      ? videoScaleModeSplit
+      : videoScaleModeGrid;
+
     const hasLiveVideo = !isAudioOnly && !paused;
 
     let highlight;
     if (enableDefaultHighlight && highlightDominant && highlighted) {
       const highlightStyle = {
-        strokeColor: videoStyle.highlightColor,
-        strokeWidth_px: videoStyle.highlightStrokeWidth_px,
-        cornerRadius_px: videoStyle.cornerRadius_px,
+        strokeColor: adjustedVideoStyle.highlightColor,
+        strokeWidth_px: adjustedVideoStyle.highlightStrokeWidth_px,
+        cornerRadius_px: adjustedVideoStyle.cornerRadius_px,
       };
 
       highlight = (
@@ -126,8 +149,8 @@ export default function VideoGrid(gridProps) {
       video = (
         <Video
           src={videoId}
-          style={videoStyle}
-          scaleMode={videoScaleMode}
+          style={adjustedVideoStyle}
+          scaleMode={chosenScaleMode}
           layout={customLayoutForVideo}
           blend={videoBlend}
         />
@@ -136,7 +159,7 @@ export default function VideoGrid(gridProps) {
 
     const containerStyle = clipItem
       ? {
-          cornerRadius_px: videoStyle.cornerRadius_px,
+          cornerRadius_px: adjustedVideoStyle.cornerRadius_px,
         }
       : null;
 
