@@ -28,18 +28,32 @@ export default function VideoGrid(gridProps) {
 
   const totalNumItems = participantDescs.length;
 
-  // Define scale modes based on mode
+  // Track readiness of videos by participant index
+  const [readyStates, setReadyStates] = React.useState({});
+
+  // When mode or participants change, reset readiness of new participants
+  React.useEffect(() => {
+    // Reset readiness for all participants (or selectively if you want)
+    setReadyStates({});
+  }, [layoutMode, totalNumItems]);
+
+  // Handler when video can play
+  function onVideoCanPlay(index) {
+    setReadyStates((prev) => {
+      if (prev[index]) return prev; // already ready
+      return { ...prev, [index]: true };
+    });
+  }
+
+  // Determine scale mode by mode and screenshare
   const videoScaleModeGrid = scaleMode;
   const videoScaleModeSplit = 'fill'; // zoom in for split mode
 
-  // Optional: Adjust videoStyle per mode if needed
-  // For example, remove highlightColor or cornerRadius on split if that causes zoom
+  // Optional style adjustment per mode
   const adjustedVideoStyle = React.useMemo(() => {
     if (layoutMode === 'split') {
-      // Example: remove highlight or adjust as needed
       return {
         ...videoStyle,
-        // override anything here if needed to avoid zoom issues
       };
     }
     return videoStyle;
@@ -111,7 +125,7 @@ export default function VideoGrid(gridProps) {
       );
     }
 
-    // Choose scaleMode depending on mode and if screenshare
+    // Choose scaleMode depending on mode and screenshare
     const chosenScaleMode = isScreenshare
       ? scaleModeForScreenshare
       : layoutMode === 'split'
@@ -137,41 +151,67 @@ export default function VideoGrid(gridProps) {
       );
     }
 
-    let video;
+    // Determine if we should show video or placeholder based on readiness,
+    // especially for the 3rd participant when switching from split -> grid
+    const isThirdParticipant = index === 2;
+    const videoReady = !!readyStates[index];
+
+    // Show placeholder until video is ready
+    if (isThirdParticipant && layoutMode === 'grid' && hasLiveVideo && !videoReady) {
+      return (
+        <Box
+          key={key}
+          id={key}
+          layout={itemLayout}
+          style={clipItem ? { cornerRadius_px: adjustedVideoStyle.cornerRadius_px } : null}
+          clip={clipItem}
+        >
+          <PausedPlaceholder
+            layout={customLayoutForVideo}
+            placeholderStyle={placeholderStyle}
+          />
+          {participantLabel}
+          {highlight}
+          {customDecoratorComponent}
+        </Box>
+      );
+    }
+
+    let videoContent;
     if (!hasLiveVideo) {
-      video = (
+      videoContent = (
         <PausedPlaceholder
           layout={customLayoutForVideo}
-          {...{ placeholderStyle }}
+          placeholderStyle={placeholderStyle}
         />
       );
     } else {
-      video = (
+      videoContent = (
         <Video
           src={videoId}
           style={adjustedVideoStyle}
           scaleMode={chosenScaleMode}
           layout={customLayoutForVideo}
           blend={videoBlend}
+          onCanPlay={() => onVideoCanPlay(index)}
+          muted={true} // mute video to avoid autoplay issues
+          autoPlay={true}
+          playsInline={true}
+          controls={false}
+          preload="auto"
         />
       );
     }
-
-    const containerStyle = clipItem
-      ? {
-          cornerRadius_px: adjustedVideoStyle.cornerRadius_px,
-        }
-      : null;
 
     return (
       <Box
         key={key}
         id={key}
         layout={itemLayout}
-        style={containerStyle}
+        style={clipItem ? { cornerRadius_px: adjustedVideoStyle.cornerRadius_px } : null}
         clip={clipItem}
       >
-        {video}
+        {videoContent}
         {participantLabel}
         {highlight}
         {customDecoratorComponent}
@@ -179,7 +219,7 @@ export default function VideoGrid(gridProps) {
     );
   }
 
-  // Render hidden participant videos off-screen (very small + opacity 0)
+  // Render hidden participant videos off-screen to keep them subscribed and active
   function renderHiddenParticipant(participant, index) {
     const key = `hidden_participant_${index}`;
     return (
